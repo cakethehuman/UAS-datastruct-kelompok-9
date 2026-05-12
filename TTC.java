@@ -23,39 +23,72 @@ class Game{
         board[i][j] = input;
     }
 
-    public void checkWin(){
+    public boolean checkWin(char player){
 
+        // check rows
+        for(int i = 0; i < 3; i++){
+            if(board[i][0] == player &&
+            board[i][1] == player &&
+            board[i][2] == player){
+                return true;
+            }
+        }
+
+        // check columns
+        for(int j = 0; j < 3; j++){
+            if(board[0][j] == player &&
+            board[1][j] == player &&
+            board[2][j] == player){
+                return true;
+            }
+        }
+
+        // check diagonal top-left -> bottom-right
+        if(board[0][0] == player &&
+        board[1][1] == player &&
+        board[2][2] == player){
+            return true;
+        }
+
+        // check diagonal top-right -> bottom-left
+        if(board[0][2] == player &&
+        board[1][1] == player &&
+        board[2][0] == player){
+            return true;
+        }
+
+        return false;
     }
 
-    public void insertPosition(int position){
+    public void insertPosition(int position, char turn){
         try{
             switch (position) {
             case 1:
-                insertItem(0, 0, 'X');
+                insertItem(0, 0, turn);
                 break;
             case 2:
-                insertItem(0, 1, 'X');
+                insertItem(0, 1, turn);
                 break;
             case 3:
-                insertItem(0, 2, 'X');
+                insertItem(0, 2, turn);
                 break;
             case 4:
-                insertItem(1, 0, 'X');
+                insertItem(1, 0, turn);
                 break;
             case 5:
-                insertItem(1, 1, 'x');
+                insertItem(1, 1, turn);
                 break;
             case 6:
-                insertItem(1, 2, 'X');
+                insertItem(1, 2, turn);
                 break;
             case 7:
-                insertItem(2, 0, 'X');
+                insertItem(2, 0, turn);
                 break;
             case 8:
-                insertItem(2, 1, 'X');
+                insertItem(2, 1, turn);
                 break;
             case 9:
-                insertItem(2, 2, 'X');
+                insertItem(2, 2, turn);
                 break;
             default:
                 throw new AssertionError();
@@ -82,13 +115,33 @@ class Game{
         }
         // show the board and inputs using a method so everything is seperated
         Scanner inputer = new Scanner(System.in);
-        while (!board.equals("XXX")) {
+        char turn = 'X';
+        while (true) {
             showBoard();
+
+            // change turn
+            if(turn == 'X'){
+                turn = 'O';
+            }else{
+                turn = 'X';
+            }
+            
+            System.out.println("Lagi turn : " + turn);
             System.out.print("Mau masukin di mana? : ");
             int position = inputer.nextInt();
-            insertPosition(position);   
+
+            insertPosition(position,turn);   
+
+            if(checkWin('X')){
+                System.out.println("X win");
+                break;
+            }
+
+            if(checkWin('O')){
+                System.out.println("O win");
+                break;
+            }
         }
-        
         inputer.close();
     }
 }
