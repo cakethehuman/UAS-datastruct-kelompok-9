@@ -20,7 +20,11 @@ class Game{
     }
 
     public void insertItem(int i, int j, char input){
-        board[i][j] = input;
+        if(board[i][j] != 'X' && board[i][j] != 'O'){
+            board[i][j] = input;
+        } else{
+            System.out.println("Full");
+        }
     }
 
     public boolean checkWin(char player){
@@ -125,7 +129,7 @@ class Game{
             }else{
                 turn = 'X';
             }
-            
+
             System.out.println("Lagi turn : " + turn);
             System.out.print("Mau masukin di mana? : ");
             int position = inputer.nextInt();
