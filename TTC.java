@@ -55,6 +55,18 @@ class Game{
         return false;
     }
 
+    public int evaluate(){
+        if(checkWin('O')){
+            return 10;
+        }
+
+        if(checkWin('X')){
+            return -10;
+        }
+
+        return 0;
+    }
+
     public void insertPosition(int position, char turn){
         try{
             switch (position) {
@@ -111,6 +123,17 @@ class Game{
         while (true) {
             showBoard();
 
+            System.out.println("Lagi turn : " + turn);
+            System.out.print("Mau masukin di mana? : ");
+            int position = inputer.nextInt();
+            
+            insertPosition(position, turn);   
+                     // Check winner
+            if(checkWin(turn)){
+                System.out.println(turn + " win");
+                break;
+            }
+
             // change turn
             if(turn == 'X'){
                 turn = 'O';
@@ -118,21 +141,7 @@ class Game{
                 turn = 'X';
             }
 
-            System.out.println("Lagi turn : " + turn);
-            System.out.print("Mau masukin di mana? : ");
-            int position = inputer.nextInt();
-            
-            insertPosition(position, turn);   
-
-            if(checkWin('X')){
-                System.out.println("X win");
-                break;
-            }
-
-            if(checkWin('O')){
-                System.out.println("O win");
-                break;
-            }
+   
         }
         inputer.close();
     }
