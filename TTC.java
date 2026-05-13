@@ -28,8 +28,6 @@ class Game{
     }
 
     public boolean checkWin(char player){
-
-        // check rows
         for(int i = 0; i < 3; i++){
             if(board[i][0] == player &&
             board[i][1] == player &&
@@ -37,8 +35,6 @@ class Game{
                 return true;
             }
         }
-
-        // check columns
         for(int j = 0; j < 3; j++){
             if(board[0][j] == player &&
             board[1][j] == player &&
@@ -46,21 +42,16 @@ class Game{
                 return true;
             }
         }
-
-        // check diagonal top-left -> bottom-right
         if(board[0][0] == player &&
         board[1][1] == player &&
         board[2][2] == player){
             return true;
         }
-
-        // check diagonal top-right -> bottom-left
         if(board[0][2] == player &&
         board[1][1] == player &&
         board[2][0] == player){
             return true;
         }
-
         return false;
     }
 
@@ -97,7 +88,6 @@ class Game{
             default:
                 throw new AssertionError();
             }
-            
         } catch(Exception e){
             System.out.println("Error lah");
         }
@@ -105,10 +95,7 @@ class Game{
 
     public void startGame(){
         // need variable to play the game
-        int counter = 0;
-
-        // if win lose logic ig
-  
+        int counter = 0;  
 
         // input starting values
         for (int i = 0; i < 3; i++) {
@@ -120,6 +107,7 @@ class Game{
         // show the board and inputs using a method so everything is seperated
         Scanner inputer = new Scanner(System.in);
         char turn = 'X';
+        // if win lose logic ig
         while (true) {
             showBoard();
 
@@ -133,8 +121,8 @@ class Game{
             System.out.println("Lagi turn : " + turn);
             System.out.print("Mau masukin di mana? : ");
             int position = inputer.nextInt();
-
-            insertPosition(position,turn);   
+            
+            insertPosition(position, turn);   
 
             if(checkWin('X')){
                 System.out.println("X win");
