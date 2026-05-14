@@ -1,6 +1,14 @@
+// Kelompok 9 Kelas A
+// 
+// 
+//
+
 import java.util.*;
+
 class Game{
     char[][] board = new char[3][3];
+    
+    // Helper functions
     
     // Show baord to start the game ig
     public void showBoard(){
@@ -19,14 +27,7 @@ class Game{
         }
     }
 
-    public void insertItem(int i, int j, char input){
-        if(board[i][j] != 'X' && board[i][j] != 'O'){
-            board[i][j] = input;
-        } else{
-            System.out.println("Full");
-        }
-    }
-
+    // Check if board is full
     public boolean checkWin(char player){
         for(int i = 0; i < 3; i++){
             if(board[i][0] == player &&
@@ -55,6 +56,24 @@ class Game{
         return false;
     }
 
+    // winning logic
+    public boolean isBoardFull() {
+
+        for (int i = 0; i < 3; i++) {
+
+            for (int j = 0; j < 3; j++) {
+
+                if (board[i][j] != 'X' &&
+                    board[i][j] != 'O') {
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public int evaluate(){
         if(checkWin('O')){
             return 10;
@@ -67,49 +86,59 @@ class Game{
         return 0;
     }
 
-    public void insertPosition(int position, char turn){
-        try{
-            switch (position) {
-            case 1:
-                insertItem(0, 0, turn);
-                break;
-            case 2:
-                insertItem(0, 1, turn);
-                break;
-            case 3:
-                insertItem(0, 2, turn);
-                break;
-            case 4:
-                insertItem(1, 0, turn);
-                break;
-            case 5:
-                insertItem(1, 1, turn);
-                break;
-            case 6:
-                insertItem(1, 2, turn);
-                break;
-            case 7:
-                insertItem(2, 0, turn);
-                break;
-            case 8:
-                insertItem(2, 1, turn);
-                break;
-            case 9:
-                insertItem(2, 2, turn);
-                break;
-            default:
-                throw new AssertionError();
-            }
-        } catch(Exception e){
-            System.out.println("Error lah");
+    // Inputing logic
+    public boolean insertItem(int i, int j, char input){
+        if(board[i][j] != 'X' && board[i][j] != 'O'){
+            board[i][j] = input;
+            return true;
+        } else{
+            System.out.printf("TIdak bisa input di %d %d karena sudah ada simbol di posisi tersebut coba lagi \n", i,j);
+            return false;
         }
     }
 
+public boolean insertPosition(int position, char turn){
+    try{
+        switch (position) {
+            case 1:
+                return insertItem(0, 0, turn);
+            case 2:
+                return insertItem(0, 1, turn);
+            case 3:
+                return insertItem(0, 2, turn);
+            case 4:
+                return insertItem(1, 0, turn);
+            case 5:
+                return insertItem(1, 1, turn);
+            case 6:
+                return insertItem(1, 2, turn);
+            case 7:
+                return insertItem(2, 0, turn);
+            case 8:
+                return insertItem(2, 1, turn);
+            case 9:
+                return insertItem(2, 2, turn);
+            default:
+                System.err.println("Index out of range");
+                return false;
+        }
+
+    } 
+    
+    catch(Exception e){
+
+        System.err.println("Error posisi tidak valid");
+
+        return false;
+    }
+}
+
+    // Start the game
     public void startGame(){
         // need variable to play the game
         int counter = 0;  
 
-        // input starting values
+        // input starting values from 1-9 to the board
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 counter += 1;
@@ -127,8 +156,13 @@ class Game{
             System.out.print("Mau masukin di mana? : ");
             int position = inputer.nextInt();
             
-            insertPosition(position, turn);   
-                     // Check winner
+            boolean valid = insertPosition(position, turn);   
+
+            if(!valid){
+                continue;
+            }
+            
+            // Check winner
             if(checkWin(turn)){
                 System.out.println(turn + " win");
                 break;
@@ -150,7 +184,9 @@ public class TTC {
     public static void main(String[] args) {
         Game ttc = new Game();
         ttc.startGame();
-        // ttc.InsertItem(1, 0, 'x');
-        ttc.showBoard();
+
     }
 }
+
+
+// Expected to have a game tree + AI + result playing the game
