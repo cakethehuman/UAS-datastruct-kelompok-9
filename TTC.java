@@ -87,15 +87,74 @@ class Game{
     }
 
     // Inputing logic
-    public boolean insertItem(int i, int j, char input){
-        if(board[i][j] != 'X' && board[i][j] != 'O'){
+    public boolean insertItem(int i, int j, char input) {
+        if (board[i][j] != 'X' && board[i][j] != 'O') {
             board[i][j] = input;
             return true;
-        } else{
-            System.out.printf("TIdak bisa input di %d %d karena sudah ada simbol di posisi tersebut coba lagi \n", i,j);
+        } else {
+            System.out.printf("TIdak bisa input di %d %d karena sudah ada simbol di posisi tersebut coba lagi \n", i,
+                    j);
             return false;
         }
     }
+    public int minimax(int depth, boolean isMax) {
+    int score = evaluate();
+
+    if (score == 10) return score - depth;
+    if (score == -10) return score + depth;
+    if (isBoardFull()) return 0;
+
+    if (isMax) {
+        int best = -1000;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] != 'X' && board[i][j] != 'O') {
+                    char temp = board[i][j];
+                    board[i][j] = 'O';
+                    best = Math.max(best, minimax(depth + 1, !isMax));
+                    board[i][j] = temp;
+                }
+            }
+        }
+        return best;
+    } else {
+        int best = 1000;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] != 'X' && board[i][j] != 'O') {
+                    char temp = board[i][j];
+                    board[i][j] = 'X';
+                    best = Math.min(best, minimax(depth + 1, !isMax));
+                    board[i][j] = temp;
+                }
+            }
+        }
+        return best;
+    }
+}
+
+public int[] findBestMove() {
+    int bestVal = -1000;
+    int[] bestMove = {-1, -1};
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] != 'X' && board[i][j] != 'O') {
+                char temp = board[i][j];
+                board[i][j] = 'O';
+                int moveVal = minimax(0, false);
+                board[i][j] = temp;
+
+                if (moveVal > bestVal) {
+                    bestMove[0] = i;
+                    bestMove[1] = j;
+                    bestVal = moveVal;
+                }
+            }
+        }
+    }
+    return bestMove;
+}
 
 public boolean insertPosition(int position, char turn){
     try{
@@ -151,20 +210,30 @@ public boolean insertPosition(int position, char turn){
         // if win lose logic ig
         while (true) {
             showBoard();
+            if (turn == 'X') {
+                System.out.println("Lagi turn : " + turn);
+                System.out.print("Mau masukin di mana? : ");
+                int position = inputer.nextInt();
+                
+                boolean valid = insertPosition(position, turn);   
 
-            System.out.println("Lagi turn : " + turn);
-            System.out.print("Mau masukin di mana? : ");
-            int position = inputer.nextInt();
-            
-            boolean valid = insertPosition(position, turn);   
-
-            if(!valid){
-                continue;
+                if(!valid){
+                    continue;
+                }
+            } else {
+                System.out.println("Giliran AI (O) sedang berpikir...");
+                int[] bestMove = findBestMove();
+                insertItem(bestMove[0], bestMove[1], turn);
             }
             
             // Check winner
-            if(checkWin(turn)){
+            if (checkWin(turn)) {
                 System.out.println(turn + " win");
+                break;
+            }
+            if (isBoardFull()) {
+                showBoard();
+                System.out.println("Permainan Seri!");
                 break;
             }
 
