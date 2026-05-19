@@ -1,4 +1,4 @@
-// Kelompok 9 Kelas A
+    // Kelompok 9 Kelas A
 // 
 // 
 //
@@ -13,17 +13,18 @@ class Game{
     // Show baord to start the game ig
     public void showBoard(){
         System.err.println("Board : ");
+        int position = 1;
         for (int i = 0; i < 3; i++) {
-            System.out.print('|');
+            System.out.print("| ");
             for (int j = 0; j < 3; j++) {
-                if(j == 2){
-                   System.out.print(board[i][j]); 
-                   System.out.println('|');
+                if(board[i][j] == ' '){
+                    System.out.printf("%s ", position);
                 } else{
-                   System.out.print(board[i][j]); 
-                   System.out.print(' '); 
-                }
+                    System.out.printf("%s ",board[i][j]); 
+                } 
+                position++;
             }
+            System.out.println("|");
         }
     }
 
@@ -76,11 +77,11 @@ class Game{
 
     public int evaluate(){
         if(checkWin('O')){
-            return 10;
+            return 1;
         }
 
         if(checkWin('X')){
-            return -10;
+            return -1;
         }
 
         return 0;
@@ -97,52 +98,95 @@ class Game{
         }
     }
 
-public boolean insertPosition(int position, char turn){
-    try{
-        switch (position) {
-            case 1:
-                return insertItem(0, 0, turn);
-            case 2:
-                return insertItem(0, 1, turn);
-            case 3:
-                return insertItem(0, 2, turn);
-            case 4:
-                return insertItem(1, 0, turn);
-            case 5:
-                return insertItem(1, 1, turn);
-            case 6:
-                return insertItem(1, 2, turn);
-            case 7:
-                return insertItem(2, 0, turn);
-            case 8:
-                return insertItem(2, 1, turn);
-            case 9:
-                return insertItem(2, 2, turn);
-            default:
-                System.err.println("Index out of range");
-                return false;
+    public boolean insertPosition(int position, char turn){
+        try{
+            switch (position) {
+                case 1:
+                    return insertItem(0, 0, turn);
+                case 2:
+                    return insertItem(0, 1, turn);
+                case 3:
+                    return insertItem(0, 2, turn);
+                case 4:
+                    return insertItem(1, 0, turn);
+                case 5:
+                    return insertItem(1, 1, turn);
+                case 6:
+                    return insertItem(1, 2, turn);
+                case 7:
+                    return insertItem(2, 0, turn);
+                case 8:
+                    return insertItem(2, 1, turn);
+                case 9:
+                    return insertItem(2, 2, turn);
+                default:
+                    System.err.println("Index out of range");
+                    return false;
+            }
+
+        } 
+        
+        catch(Exception e){
+
+            System.err.println("Error posisi tidak valid");
+
+            return false;
+        }
+    }
+
+    public int minmax(boolean isMax){
+        int score = evaluate();
+
+        if(score == 1){
+            return score;
+        } 
+        
+        if (score == -1){
+            return score;
         }
 
-    } 
-    
-    catch(Exception e){
+        if(isBoardFull()){
+            return 0;
+        }
 
-        System.err.println("Error posisi tidak valid");
+        if(isMax){
+            int best = -1000;
+            
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if(board[i][j] == ' '){
+                        board[i][j] = 'O';
+                        int value = minmax(false);
+                        board[i][j] = ' ';
+                        best = Math.max(best, value);
+                    }
+                }
+            }
+            return best;
+        } else {
+            int best = 1000;
 
-        return false;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if(board[i][j] == ' '){
+                        board[i][j] = 'X';
+                        int value = minmax(true);
+                        board[i][j] = ' ';
+                        best = Math.min(best, value);
+                    }
+                }
+            }
+            return best;
+        }
     }
-}
 
     // Start the game
     public void startGame(){
-        // need variable to play the game
-        int counter = 0;  
 
         // input starting values from 1-9 to the board
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                counter += 1;
-                board[i][j] = (char) (counter + '0');
+                board[i][j] = ' ';
             }
         }
         // show the board and inputs using a method so everything is seperated
@@ -165,6 +209,7 @@ public boolean insertPosition(int position, char turn){
             // Check winner
             if(checkWin(turn)){
                 System.out.println(turn + " win");
+                showBoard();
                 break;
             }
 
