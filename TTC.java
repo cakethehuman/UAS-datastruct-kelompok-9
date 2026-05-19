@@ -180,6 +180,31 @@ class Game{
         }
     }
 
+    public int[] bestMove(){
+        int bestScore = -100;
+
+        int[] move = new int[2];
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                
+                if (board[i][j] == ' ') {
+                    board[i][j] = 'O';
+                    int score = minmax(false);
+                    board[i][j] = ' ';
+                    if(score > bestScore){
+                        bestScore = score;
+
+                        move[0] = i;
+                        move[1] = j;
+                    }
+                }
+            }
+        }
+
+        return move;
+    }
+
     // Start the game
     public void startGame(){
 
@@ -196,14 +221,27 @@ class Game{
         while (true) {
             showBoard();
 
-            System.out.println("Lagi turn : " + turn);
-            System.out.print("Mau masukin di mana? : ");
-            int position = inputer.nextInt();
-            
-            boolean valid = insertPosition(position, turn);   
+            boolean valid;
 
-            if(!valid){
-                continue;
+            if(turn == 'X'){
+
+                System.out.println("Lagi turn : " + turn);
+
+                System.out.print("Mau masukin di mana? : ");
+
+                int position = inputer.nextInt();
+
+                valid = insertPosition(position, turn);
+            }
+            else{
+
+                System.out.println("AI TURN");
+
+                int[] aiMove = bestMove();
+
+                board[aiMove[0]][aiMove[1]] = 'O';
+
+                valid = true;
             }
             
             // Check winner
