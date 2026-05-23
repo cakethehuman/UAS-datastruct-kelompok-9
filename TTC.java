@@ -338,12 +338,14 @@ class Game{
 public class TTC {
     public static void main(String[] args) {
         Scanner globalScanner = new Scanner(System.in);
+        System.out.println(" ");
         System.out.println("████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗");
         System.out.println("╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝");
         System.out.println("   ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  ");
         System.out.println("   ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  ");
         System.out.println("   ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗");
         System.out.println("   ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝");
+        System.out.println(" ");
         while(true){
             Game ttc = new Game();
             System.out.print("Mau mulai duluan atau tidak? (Y/N) : ");
@@ -364,7 +366,7 @@ public class TTC {
                 System.out.println("Terima kasih sudah bermain!");
                 break; // This breaks out of the outer loop and stops the program
             }
-            System.out.println("\nYatta, Let's Play Again");
+            System.out.print("\nLet's Play Again");
             try{
                 Thread.sleep(2000);
             } catch(InterruptedException e){
