@@ -338,12 +338,18 @@ class Game{
 public class TTC {
     public static void main(String[] args) {
         Scanner globalScanner = new Scanner(System.in);
+        System.out.println("████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗");
+        System.out.println("╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝");
+        System.out.println("   ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  ");
+        System.out.println("   ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  ");
+        System.out.println("   ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗");
+        System.out.println("   ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝");
         while(true){
             Game ttc = new Game();
-            System.out.println("Mau mulai duluan atau tidak? (Y/N)");
+            System.out.print("Mau mulai duluan atau tidak? (Y/N) : ");
             String Choice = globalScanner.next().toUpperCase();
             while(!Choice.equals("Y") && !Choice.equals("N")){
-                System.out.println("Input tidak valid, silahkan input Y atau N");
+                System.out.print("Input tidak valid, silahkan input Y atau N : ");
                 Choice = globalScanner.next().toUpperCase();
             }
             if(Choice.equals("Y")){
