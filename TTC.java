@@ -239,6 +239,10 @@ class Game{
                 int position = inputer.nextInt();
 
                 valid = insertPosition(position, turn);
+
+                if(!valid){
+                    continue;
+                }
             }
             else{
 
@@ -301,6 +305,7 @@ class Game{
                 
             }
             else{
+                valid = true;
                 System.out.println("Lagi turn : " + turn);
 
                 System.out.print("Mau masukin di mana? : ");
@@ -308,6 +313,11 @@ class Game{
                 int position = inputer.nextInt();
 
                 valid = insertPosition(position, turn);
+
+
+                if(!valid){
+                    continue;
+                }
             }
             
             // Check winner
@@ -338,6 +348,7 @@ class Game{
 public class TTC {
     public static void main(String[] args) {
         Scanner globalScanner = new Scanner(System.in);
+        // Print game title (Keren)
         System.out.println(" ");
         System.out.println("████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗");
         System.out.println("╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝");
@@ -350,21 +361,25 @@ public class TTC {
             Game ttc = new Game();
             System.out.print("Mau mulai duluan atau tidak? (Y/N) : ");
             String Choice = globalScanner.next().toUpperCase();
+
             while(!Choice.equals("Y") && !Choice.equals("N")){
                 System.out.print("Input tidak valid, silahkan input Y atau N : ");
                 Choice = globalScanner.next().toUpperCase();
+
             }
+
             if(Choice.equals("Y")){
                 ttc.startGame(globalScanner);
             } else if(Choice.equals("N")){
                 ttc.startGameAI(globalScanner);
             }
+
             System.out.print("Main lagi? (Y/N): ");
             String playAgain = globalScanner.next();
 
             if (playAgain.equalsIgnoreCase("N")) {
                 System.out.println("Terima kasih sudah bermain!");
-                break; // This breaks out of the outer loop and stops the program
+                break; 
             }
             System.out.print("\nLet's Play Again");
             try{
