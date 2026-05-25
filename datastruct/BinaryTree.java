@@ -6,6 +6,30 @@ package datastruct;
  * 
  */
 
+ class GTNode<K,V>{
+    private K key; //
+    private V data;
+    private GTNode<K,V> firlink;
+    private GTNode<K,V> seclink;
+    private GTNode<K,V> thilink;
+    private GTNode<K,V> foulink;
+    private GTNode<K,V> fiflink;
+    private GTNode<K,V> sixlink;
+    private GTNode<K,V> sevlink;
+
+    public GTNode(K k ,V data){
+        this.key = k;
+        this.data = data;
+        this.firlink = null;
+        this.seclink = null;
+        this.thilink = null;
+        this.foulink = null;
+        this.fiflink = null;
+        this.sixlink = null;
+        this.sevlink = null;
+    }
+ }
+
  class BTNode<K,V> {
     private K key;    //key ada bilangan bulat
     private V data;   // object data dari sebuah class
