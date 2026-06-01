@@ -1,8 +1,8 @@
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class TicTacToe {
     private JFrame frame;
@@ -17,7 +17,7 @@ public class TicTacToe {
     private DefaultMutableTreeNode currentHistoryNode; 
 
     public TicTacToe() {
-        frame = new JFrame("Tic Tac Toe vs AI");
+        frame = new JFrame("Tic Tac Toe vs AI kelompok 9 kelas A");
         board = new JButton[3][3];
         gameOver = false;
         setupGUI();
@@ -27,7 +27,7 @@ public class TicTacToe {
     private void setupGUI() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // 550 height gives room for the button at the bottom
-        frame.setSize(500, 550); 
+        frame.setSize(550, 550); 
         frame.setLayout(new BorderLayout());
 
         JPanel gridPanel = new JPanel(new GridLayout(3, 3));
@@ -43,7 +43,7 @@ public class TicTacToe {
         frame.add(gridPanel, BorderLayout.CENTER);
         
         // The Live View Button is back!
-        viewTreeButton = new JButton("View Live Game Tree");
+        viewTreeButton = new JButton("Liat Game Tree");
         viewTreeButton.setFont(new Font("Arial", Font.PLAIN, 16));
         viewTreeButton.addActionListener(e -> TreeViewerWindow.display(fullGameTree, frame));
         frame.add(viewTreeButton, BorderLayout.SOUTH);
@@ -58,8 +58,8 @@ public class TicTacToe {
         ((GameState) fullGameTree.getUserObject()).setActualGamePath(true);
         currentHistoryNode = fullGameTree;
 
-        Object[] options = {"I'll go first (X)", "AI goes first (O)"};
-        int choice = JOptionPane.showOptionDialog(frame, "Who should make the first move?", "Game Setup",
+        Object[] options = {"User gereak pertama (X)", "AI gerak pertama (O)"};
+        int choice = JOptionPane.showOptionDialog(frame, "Siapa yang bakal gerak pertama?", "Game Setup",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (choice == JOptionPane.CLOSED_OPTION) System.exit(0);
@@ -277,7 +277,7 @@ public class TicTacToe {
             String resultMessage = (score == 10 || score == -10) ? 
                 (pieceToCheck.equals(humanPiece) ? "You win!" : "AI wins!") : "It's a draw!";
             
-            Object[] options = {"Play Again", "View Final Tree", "Exit Game"};
+            Object[] options = {"Play Again", "Liat hasil Tree", "Exit Game"};
             
             int response = JOptionPane.showOptionDialog(frame, 
                     resultMessage + "\nWhat would you like to do?", 
