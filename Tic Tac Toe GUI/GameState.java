@@ -4,10 +4,9 @@ public class GameState {
     private String scoreInfo;
     private boolean isOptimal;
     private int rawScore; 
-    // Add this variable at the top with your others
+   
     private boolean isActualGamePath = false;
 
-    // Add these getters/setters at the bottom
     public boolean isActualGamePath() { return isActualGamePath; }
     public void setActualGamePath(boolean actualGamePath) { isActualGamePath = actualGamePath; }
 
@@ -21,7 +20,6 @@ public class GameState {
 
     public String getTitle() { return title; }
     
-    // --> THIS IS THE FIX <--
     public void setTitle(String title) { this.title = title; } 
 
     public String[] getBoardState() { return boardState; }

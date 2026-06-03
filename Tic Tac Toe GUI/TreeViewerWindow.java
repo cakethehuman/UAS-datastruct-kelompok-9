@@ -1,9 +1,9 @@
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class TreeViewerWindow {
     public static void display(DefaultMutableTreeNode treeRoot, JFrame parentFrame) {
@@ -34,7 +34,6 @@ class CustomTreeCanvas extends JPanel {
 
     private BoardTreeRenderer cellRenderer;
     
-    // THE SECRET WEAPON: Swing's official stamping engine
     private CellRendererPane rendererPane;
 
     public CustomTreeCanvas(DefaultMutableTreeNode root) {
@@ -42,7 +41,6 @@ class CustomTreeCanvas extends JPanel {
         this.nodeLocations = new HashMap<>();
         this.cellRenderer = new BoardTreeRenderer();
         
-        // Initialize and add the hidden pane to our canvas
         this.rendererPane = new CellRendererPane();
         add(rendererPane);
         
@@ -110,11 +108,10 @@ class CustomTreeCanvas extends JPanel {
             Point p2 = nodeLocations.get(child);
             
             if (p2 != null) {
-                // Extract the game state to check if this specific branch is optimal or real
                 GameState childState = (GameState) child.getUserObject();
                 
                 if (childState.isActualGamePath()) {
-                    g2.setStroke(new BasicStroke(10)); // Massive line for the real game
+                    g2.setStroke(new BasicStroke(10)); 
                     g2.setColor(new Color(0, 123, 255)); // Bright Blue
                 } else if (childState.isOptimal()) {
                     g2.setStroke(new BasicStroke(6));
@@ -130,10 +127,9 @@ class CustomTreeCanvas extends JPanel {
                     g2.setColor(new Color(200, 200, 200)); // Light Gray
                 }
 
-                // Draw the line with the newly selected color and thickness
                 g2.drawLine(p1.x + (NODE_WIDTH / 2), p1.y + NODE_HEIGHT, p2.x + (NODE_WIDTH / 2), p2.y);
                 
-                // Keep drawing down the tree
+             
                 drawLines(g2, child);
             }
         }

@@ -1,7 +1,7 @@
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
-import java.awt.*;
 
 public class BoardTreeRenderer extends JPanel implements TreeCellRenderer {
     private JLabel titleLabel, scoreLabel;
@@ -55,27 +55,22 @@ public class BoardTreeRenderer extends JPanel implements TreeCellRenderer {
                 else cells[i].setForeground(Color.BLACK);
             }
 
-            // Apply dynamic highlighting based on the raw score
-            // Apply dynamic highlighting based on the raw score
             if (state.isOptimal()) {
                 if (state.getRawScore() > 0) { 
-                    // Positive Score = AI Wins (Strong GREEN)
+                    
                     setBorder(BorderFactory.createLineBorder(new Color(40, 167, 69), 8));
                     setBackground(new Color(200, 255, 210));
                     centerWrapper.setBackground(new Color(200, 255, 210));
                 } else if (state.getRawScore() < 0) { 
-                    // Negative Score = Human Wins (Strong RED)
                     setBorder(BorderFactory.createLineBorder(new Color(220, 53, 69), 8));
                     setBackground(new Color(255, 210, 210));
                     centerWrapper.setBackground(new Color(255, 210, 210));
                 } else { 
-                    // Zero Score = Draw (Strong ORANGE)
                     setBorder(BorderFactory.createLineBorder(new Color(253, 126, 20), 8));
                     setBackground(new Color(255, 235, 200));
                     centerWrapper.setBackground(new Color(255, 235, 200));
                 }
             } else {
-                // Non-optimal paths stay default gray
                 setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
                 setBackground(Color.WHITE);
                 centerWrapper.setBackground(Color.WHITE);

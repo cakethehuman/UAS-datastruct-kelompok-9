@@ -17,7 +17,7 @@ public class TicTacToe {
     private DefaultMutableTreeNode currentHistoryNode; 
 
     public TicTacToe() {
-        frame = new JFrame("Tic Tac Toe vs AI kelompok 9 kelas A");
+        frame = new JFrame("Tic Tac Toe AI kelompok 9 kelas A");
         board = new JButton[3][3];
         gameOver = false;
         setupGUI();
@@ -58,7 +58,7 @@ public class TicTacToe {
         ((GameState) fullGameTree.getUserObject()).setActualGamePath(true);
         currentHistoryNode = fullGameTree;
 
-        Object[] options = {"User gereak pertama (X)", "AI gerak pertama (O)"};
+        Object[] options = {"User gerak pertama (X)", "AI gerak pertama (O)"};
         int choice = JOptionPane.showOptionDialog(frame, "Siapa yang bakal gerak pertama?", "Game Setup",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
@@ -275,12 +275,12 @@ public class TicTacToe {
             gameOver = true;
             
             String resultMessage = (score == 10 || score == -10) ? 
-                (pieceToCheck.equals(humanPiece) ? "You win!" : "AI wins!") : "It's a draw!";
+                (pieceToCheck.equals(humanPiece) ? "Kamu menang!" : "AI menang!") : "Draw!";
             
             Object[] options = {"Play Again", "Liat hasil Tree", "Exit Game"};
             
             int response = JOptionPane.showOptionDialog(frame, 
-                    resultMessage + "\nWhat would you like to do?", 
+                    resultMessage + "\nPilih?", 
                     "Game Over", 
                     JOptionPane.YES_NO_CANCEL_OPTION, 
                     JOptionPane.QUESTION_MESSAGE, 
