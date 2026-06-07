@@ -17,7 +17,7 @@ public class TicTacToe {
     private DefaultMutableTreeNode currentHistoryNode; 
 
     public TicTacToe() {
-        frame = new JFrame("Tic Tac Toe AI Kelompok 9 Ganjil");
+        frame = new JFrame("Tic Tac Toe AI kelompok 9 kelas A");
         board = new JButton[3][3];
         gameOver = false;
         setupGUI();
@@ -90,11 +90,7 @@ public class TicTacToe {
     }
 
     private void scheduleAIMove() {
-        frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        Timer timer = new Timer(500, e -> {
-            makeAIMove();
-            frame.setCursor(Cursor.getDefaultCursor());
-        });
+        Timer timer = new Timer(500, e -> makeAIMove());
         timer.setRepeats(false);
         timer.start();
     }
@@ -104,7 +100,11 @@ public class TicTacToe {
 
         int bestScore = Integer.MIN_VALUE;
         int[] bestMove = new int[]{-1, -1};
+        
         DefaultMutableTreeNode bestBranch = null;
+        DefaultMutableTreeNode worstBranch = null;
+        DefaultMutableTreeNode drawBranch = null;
+        int minScoreForFilter = Integer.MAX_VALUE;
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -114,7 +114,8 @@ public class TicTacToe {
                     DefaultMutableTreeNode tempNode = new DefaultMutableTreeNode(
                             new GameState("AI considers move", getBoardSnapshot(), "", false));
                     
-                    int score = minimax(0, false, tempNode); 
+                    // FIX 1: Change Depth from 3 to 9 so it evaluates the entire game
+                    int score = minimax(0, false, tempNode, 9); 
                     
                     GameState state = (GameState) tempNode.getUserObject();
                     state.setScoreInfo("Score: " + score);
@@ -122,13 +123,14 @@ public class TicTacToe {
 
                     if (score > bestScore) {
                         bestScore = score;
-                        bestMove[0] = i; 
-                        bestMove[1] = j;
+                        bestMove[0] = i; bestMove[1] = j;
                         bestBranch = tempNode; 
                     }
-                    if(tempNode != bestBranch){
-                        currentHistoryNode.add(tempNode);
+                    if (score < minScoreForFilter) {
+                        minScoreForFilter = score; worstBranch = tempNode;
                     }
+                    if (score == 0) drawBranch = tempNode;
+
                     board[i][j].setText("");
                 }
             }
@@ -139,6 +141,11 @@ public class TicTacToe {
             ((GameState) bestBranch.getUserObject()).setOptimal(true);
             ((GameState) bestBranch.getUserObject()).setTitle("AI Chosen Move");
             currentHistoryNode.add(bestBranch);
+        }
+        if (worstBranch != null && worstBranch != bestBranch) currentHistoryNode.add(worstBranch);
+        if (drawBranch != null && drawBranch != bestBranch && drawBranch != worstBranch) currentHistoryNode.add(drawBranch);
+
+        if (bestBranch != null) {
             currentHistoryNode = bestBranch;
         }
 
@@ -147,67 +154,116 @@ public class TicTacToe {
         isHumanTurn = true;
     }
 
-    private int minimax(int depth, boolean isMaximizing, DefaultMutableTreeNode parentNode) {
+    private int minimax(int depth, boolean isMaximizing, DefaultMutableTreeNode parentNode, int maxDepth) {
         int boardScore = evaluateBoard();
 
-        if (boardScore == 10) return boardScore - depth; 
-        if (boardScore == -10) return boardScore + depth; 
-        if (isBoardFull()) return 0; 
+        if (boardScore == 10) return boardScore - depth;
+        if (boardScore == -10) return boardScore + depth;
+        if (isBoardFull()) return 0;
+        
+        if (depth >= maxDepth) return 0; 
 
-        boolean recordToTree = depth < 3; 
+        // FIX 2: UI Safeguard. Only build the Swing tree for the top 2 levels.
+        // It calculates everything else purely in math to save memory.
+        boolean recordVisuals = (parentNode != null && depth <= 2);
+
+        DefaultMutableTreeNode bestBranch = null;
+        DefaultMutableTreeNode worstBranch = null;
+        DefaultMutableTreeNode drawBranch = null;
 
         if (isMaximizing) {
             int bestScore = Integer.MIN_VALUE;
+            int minScoreForFilter = Integer.MAX_VALUE;
+
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (board[i][j].getText().equals("")) {
                         board[i][j].setText(aiPiece);
                         
-                        DefaultMutableTreeNode childNode = null;
-                        if (recordToTree) {
-                            childNode = new DefaultMutableTreeNode(
-                                new GameState("AI Eval (Depth " + depth + ")", getBoardSnapshot(), "", false));
-                            parentNode.add(childNode);
+                        DefaultMutableTreeNode tempNode = null;
+                        if (recordVisuals) {
+                            tempNode = new DefaultMutableTreeNode(
+                                    new GameState("AI Evaluation", getBoardSnapshot(), "", false));
                         }
-
-                        int score = minimax(depth + 1, false, childNode);
                         
-                        if (recordToTree && childNode != null) {
-                            GameState state = (GameState) childNode.getUserObject();
-                            state.setScoreInfo("Eval: " + score);
+                        int score = minimax(depth + 1, false, tempNode, maxDepth);
+                        
+                        if (recordVisuals && tempNode != null) {
+                            GameState state = (GameState) tempNode.getUserObject();
+                            state.setScoreInfo("Score: " + score);
+                            state.setRawScore(score);
+                            
+                            if (score > bestScore) {
+                                bestScore = score; bestBranch = tempNode; 
+                            }
+                            if (score < minScoreForFilter) {
+                                minScoreForFilter = score; worstBranch = tempNode;
+                            }
+                            if (score == 0) drawBranch = tempNode;
+                        } else {
+                            // Skip UI generation, just do pure math
+                            bestScore = Math.max(score, bestScore);
                         }
 
-                        bestScore = Math.max(score, bestScore);
                         board[i][j].setText("");
                     }
                 }
             }
+            if (recordVisuals) {
+                if (bestBranch != null) {
+                    ((GameState) bestBranch.getUserObject()).setOptimal(true);
+                    parentNode.add(bestBranch);
+                }
+                if (worstBranch != null && worstBranch != bestBranch) parentNode.add(worstBranch);
+                if (drawBranch != null && drawBranch != bestBranch && drawBranch != worstBranch) parentNode.add(drawBranch);
+            }
             return bestScore;
+            
         } else {
             int bestScore = Integer.MAX_VALUE;
+            int maxScoreForFilter = Integer.MIN_VALUE;
+
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (board[i][j].getText().equals("")) {
                         board[i][j].setText(humanPiece);
                         
-                        DefaultMutableTreeNode childNode = null;
-                        if (recordToTree) {
-                            childNode = new DefaultMutableTreeNode(
-                                new GameState("Human Reply (Depth " + depth + ")", getBoardSnapshot(), "", false));
-                            parentNode.add(childNode);
+                        DefaultMutableTreeNode tempNode = null;
+                        if (recordVisuals) {
+                            tempNode = new DefaultMutableTreeNode(
+                                    new GameState("Human Reply Eval", getBoardSnapshot(), "", false));
                         }
-
-                        int score = minimax(depth + 1, true, childNode);
                         
-                        if (recordToTree && childNode != null) {
-                            GameState state = (GameState) childNode.getUserObject();
-                            state.setScoreInfo("Eval: " + score);
+                        int score = minimax(depth + 1, true, tempNode, maxDepth);
+                        
+                        if (recordVisuals && tempNode != null) {
+                            GameState state = (GameState) tempNode.getUserObject();
+                            state.setScoreInfo("Score: " + score);
+                            state.setRawScore(score);
+                            
+                            if (score < bestScore) {
+                                bestScore = score; bestBranch = tempNode; 
+                            }
+                            if (score > maxScoreForFilter) {
+                                maxScoreForFilter = score; worstBranch = tempNode;
+                            }
+                            if (score == 0) drawBranch = tempNode;
+                        } else {
+                            // Skip UI generation, just do pure math
+                            bestScore = Math.min(score, bestScore);
                         }
 
-                        bestScore = Math.min(score, bestScore);
                         board[i][j].setText("");
                     }
                 }
+            }
+            if (recordVisuals) {
+                if (bestBranch != null) {
+                    ((GameState) bestBranch.getUserObject()).setOptimal(true);
+                    parentNode.add(bestBranch);
+                }
+                if (worstBranch != null && worstBranch != bestBranch) parentNode.add(worstBranch);
+                if (drawBranch != null && drawBranch != bestBranch && drawBranch != worstBranch) parentNode.add(drawBranch);
             }
             return bestScore;
         }
@@ -216,36 +272,26 @@ public class TicTacToe {
     private String[] getBoardSnapshot() {
         String[] snap = new String[9];
         int index = 0;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                snap[index++] = board[i][j].getText();
-            }
-        }
+        for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) snap[index++] = board[i][j].getText();
         return snap;
     }
 
     private int evaluateBoard() {
-        for (int i = 0; i < 3; i++) {
-            if (board[i][0].getText().equals(board[i][1].getText()) && 
-                board[i][1].getText().equals(board[i][2].getText()) && 
-                !board[i][0].getText().equals("")) {
-                return board[i][0].getText().equals(aiPiece) ? 10 : -10;
+        String[][] field = new String[3][3];
+        for (int i=0; i<3; i++) for (int j=0; j<3; j++) field[i][j] = board[i][j].getText();
+        for (int i=0; i<3; i++) {
+            if (field[i][0].equals(field[i][1]) && field[i][0].equals(field[i][2])) {
+                if (field[i][0].equals(aiPiece)) return 10; else if (field[i][0].equals(humanPiece)) return -10;
             }
-            if (board[0][i].getText().equals(board[1][i].getText()) && 
-                board[1][i].getText().equals(board[2][i].getText()) && 
-                !board[0][i].getText().equals("")) {
-                return board[0][i].getText().equals(aiPiece) ? 10 : -10;
+            if (field[0][i].equals(field[1][i]) && field[0][i].equals(field[2][i])) {
+                if (field[0][i].equals(aiPiece)) return 10; else if (field[0][i].equals(humanPiece)) return -10;
             }
         }
-        if (board[0][0].getText().equals(board[1][1].getText()) && 
-            board[1][1].getText().equals(board[2][2].getText()) && 
-            !board[0][0].getText().equals("")) {
-            return board[0][0].getText().equals(aiPiece) ? 10 : -10;
+        if (field[0][0].equals(field[1][1]) && field[0][0].equals(field[2][2])) {
+            if (field[0][0].equals(aiPiece)) return 10; else if (field[0][0].equals(humanPiece)) return -10;
         }
-        if (board[0][2].getText().equals(board[1][1].getText()) && 
-            board[1][1].getText().equals(board[2][0].getText()) && 
-            !board[0][2].getText().equals("")) {
-            return board[0][2].getText().equals(aiPiece) ? 10 : -10;
+        if (field[0][2].equals(field[1][1]) && field[0][2].equals(field[2][0])) {
+            if (field[0][2].equals(aiPiece)) return 10; else if (field[0][2].equals(humanPiece)) return -10;
         }
         return 0;
     }
@@ -261,7 +307,7 @@ public class TicTacToe {
             Object[] options = {"Play Again", "Liat hasil Tree", "Exit Game"};
             
             int response = JOptionPane.showOptionDialog(frame, 
-                    resultMessage + "\nPilih opsi:", 
+                    resultMessage + "\nPilih?", 
                     "Game Over", 
                     JOptionPane.YES_NO_CANCEL_OPTION, 
                     JOptionPane.QUESTION_MESSAGE, 
@@ -282,22 +328,12 @@ public class TicTacToe {
     }
 
     private boolean isBoardFull() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j].getText().equals("")) {
-                    return false;
-                }
-            }
-        }
+        for (int i=0; i<3; i++) for (int j=0; j<3; j++) if (board[i][j].getText().equals("")) return false;
         return true;
     }
 
     private void resetBoard() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                board[i][j].setText("");
-            }
-        }
+        for (int i=0; i<3; i++) for (int j=0; j<3; j++) board[i][j].setText("");
         gameOver = false;
         startGame(); 
     }
