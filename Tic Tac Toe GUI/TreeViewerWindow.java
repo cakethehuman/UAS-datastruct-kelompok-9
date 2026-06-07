@@ -7,7 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class TreeViewerWindow {
     public static void display(DefaultMutableTreeNode treeRoot, JFrame parentFrame) {
-        JFrame treeFrame = new JFrame("Final Game History Tree (Zoom & Pan)");
+        JFrame treeFrame = new JFrame("Final Game History Tree");
         treeFrame.setSize(1200, 800);
         treeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -46,6 +46,13 @@ class CustomTreeCanvas extends JPanel {
         
         setBackground(new Color(245, 245, 250));
         calculateLayout(root, 50, 50);
+
+        Point rootLoc = nodeLocations.get(root);
+        
+        if (rootLoc != null) {
+            translateX = (1200 / 2.0) - rootLoc.x - (NODE_WIDTH / 2.0);
+            translateY = 50; // 50px margin from the top
+        }
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
@@ -138,10 +145,7 @@ class CustomTreeCanvas extends JPanel {
     private void drawNodes(Graphics2D g2, DefaultMutableTreeNode node) {
         Point p = nodeLocations.get(node);
         if (p != null) {
-            // Get the component filled with the right data
             Component stamp = cellRenderer.getTreeCellRendererComponent(new JTree(), node, false, false, node.isLeaf(), 0, false);
-            
-            // Tell the RendererPane to handle all the complex layout math and draw it at X, Y
             rendererPane.paintComponent(g2, stamp, this, p.x, p.y, NODE_WIDTH, NODE_HEIGHT, true);
         }
         
