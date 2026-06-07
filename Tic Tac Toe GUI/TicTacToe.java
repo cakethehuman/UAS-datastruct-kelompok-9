@@ -17,7 +17,7 @@ public class TicTacToe {
     private DefaultMutableTreeNode currentHistoryNode; 
 
     public TicTacToe() {
-        frame = new JFrame("Tic Tac Toe AI kelompok 9 kelas A");
+        frame = new JFrame("Tic Tac Toe AI kelompok 9 kelas A Kelompok ganjil");
         board = new JButton[3][3];
         gameOver = false;
         setupGUI();
@@ -26,7 +26,7 @@ public class TicTacToe {
 
     private void setupGUI() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(550, 550); 
+        frame.setSize(550, 650); 
         frame.setLayout(new BorderLayout());
 
         JPanel gridPanel = new JPanel(new GridLayout(3, 3));
@@ -162,9 +162,6 @@ public class TicTacToe {
         if (isBoardFull()) return 0;
         
         if (depth >= maxDepth) return 0; 
-
-        // FIX 2: UI Safeguard. Only build the Swing tree for the top 2 levels.
-        // It calculates everything else purely in math to save memory.
         boolean recordVisuals = (parentNode != null && depth <= 2);
 
         DefaultMutableTreeNode bestBranch = null;
@@ -201,7 +198,6 @@ public class TicTacToe {
                             }
                             if (score == 0) drawBranch = tempNode;
                         } else {
-                            // Skip UI generation, just do pure math
                             bestScore = Math.max(score, bestScore);
                         }
 
@@ -249,7 +245,6 @@ public class TicTacToe {
                             }
                             if (score == 0) drawBranch = tempNode;
                         } else {
-                            // Skip UI generation, just do pure math
                             bestScore = Math.min(score, bestScore);
                         }
 
