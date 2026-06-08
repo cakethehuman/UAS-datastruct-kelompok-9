@@ -151,115 +151,115 @@ public class TicTacToe {
         isHumanTurn = true;
     }
 
-    private int minimax(int depth, boolean isMaximizing, DefaultMutableTreeNode parentNode, int maxDepth) {
-        int boardScore = evaluateBoard();
+        private int minimax(int depth, boolean isMaximizing, DefaultMutableTreeNode parentNode, int maxDepth) {
+            int boardScore = evaluateBoard();
 
-        if (boardScore == 10) return boardScore - depth;
-        if (boardScore == -10) return boardScore + depth;
-        if (isBoardFull()) return 0;
-        
-        if (depth >= maxDepth) return 0; 
-        boolean recordVisuals = (parentNode != null && depth <= 2);
-
-        DefaultMutableTreeNode bestBranch = null;
-        DefaultMutableTreeNode worstBranch = null;
-        DefaultMutableTreeNode drawBranch = null;
-
-        if (isMaximizing) {
-            int bestScore = Integer.MIN_VALUE;
-            int minScoreForFilter = Integer.MAX_VALUE;
-
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (board[i][j].getText().equals("")) {
-                        board[i][j].setText(aiPiece);
-                        
-                        DefaultMutableTreeNode tempNode = null;
-                        if (recordVisuals) {
-                            tempNode = new DefaultMutableTreeNode(
-                                    new GameState("Gerakan AI", getBoardSnapshot(), "", false));
-                        }
-                        
-                        int score = minimax(depth + 1, false, tempNode, maxDepth);
-                        
-                        if (recordVisuals && tempNode != null) {
-                            GameState state = (GameState) tempNode.getUserObject();
-                            state.setScoreInfo("Score: " + score);
-                            state.setRawScore(score);
-                            
-                            if (score > bestScore) {
-                                bestScore = score; bestBranch = tempNode; 
-                            }
-                            if (score < minScoreForFilter) {
-                                minScoreForFilter = score; worstBranch = tempNode;
-                            }
-                            if (score == 0) drawBranch = tempNode;
-                        } else {
-                            bestScore = Math.max(score, bestScore);
-                        }
-
-                        board[i][j].setText("");
-                    }
-                }
-            }
-            if (recordVisuals) {
-                if (bestBranch != null) {
-                    ((GameState) bestBranch.getUserObject()).setOptimal(true);
-                    parentNode.add(bestBranch);
-                }
-                if (worstBranch != null && worstBranch != bestBranch) parentNode.add(worstBranch);
-                if (drawBranch != null && drawBranch != bestBranch && drawBranch != worstBranch) parentNode.add(drawBranch);
-            }
-            return bestScore;
+            if (boardScore == 10) return boardScore - depth;
+            if (boardScore == -10) return boardScore + depth;
+            if (isBoardFull()) return 0;
             
-        } else {
-            int bestScore = Integer.MAX_VALUE;
-            int maxScoreForFilter = Integer.MIN_VALUE;
+            if (depth >= maxDepth) return 0; 
+            boolean recordVisuals = (parentNode != null && depth <= 2);
 
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (board[i][j].getText().equals("")) {
-                        board[i][j].setText(humanPiece);
-                        
-                        DefaultMutableTreeNode tempNode = null;
-                        if (recordVisuals) {
-                            tempNode = new DefaultMutableTreeNode(
-                                    new GameState("Gerakan Manusia", getBoardSnapshot(), "", false));
-                        }
-                        
-                        int score = minimax(depth + 1, true, tempNode, maxDepth);
-                        
-                        if (recordVisuals && tempNode != null) {
-                            GameState state = (GameState) tempNode.getUserObject();
-                            state.setScoreInfo("Score: " + score);
-                            state.setRawScore(score);
+            DefaultMutableTreeNode bestBranch = null;
+            DefaultMutableTreeNode worstBranch = null;
+            DefaultMutableTreeNode drawBranch = null;
+
+            if (isMaximizing) {
+                int bestScore = Integer.MIN_VALUE;
+                int minScoreForFilter = Integer.MAX_VALUE;
+
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if (board[i][j].getText().equals("")) {
+                            board[i][j].setText(aiPiece);
                             
-                            if (score < bestScore) {
-                                bestScore = score; bestBranch = tempNode; 
+                            DefaultMutableTreeNode tempNode = null;
+                            if (recordVisuals) {
+                                tempNode = new DefaultMutableTreeNode(
+                                        new GameState("Gerakan AI", getBoardSnapshot(), "", false));
                             }
-                            if (score > maxScoreForFilter) {
-                                maxScoreForFilter = score; worstBranch = tempNode;
+                            
+                            int score = minimax(depth + 1, false, tempNode, maxDepth);
+                            
+                            if (recordVisuals && tempNode != null) {
+                                GameState state = (GameState) tempNode.getUserObject();
+                                state.setScoreInfo("Score: " + score);
+                                state.setRawScore(score);
+                                
+                                if (score > bestScore) {
+                                    bestScore = score; bestBranch = tempNode; 
+                                }
+                                if (score < minScoreForFilter) {
+                                    minScoreForFilter = score; worstBranch = tempNode;
+                                }
+                                if (score == 0) drawBranch = tempNode;
+                            } else {
+                                bestScore = Math.max(score, bestScore);
                             }
-                            if (score == 0) drawBranch = tempNode;
-                        } else {
-                            bestScore = Math.min(score, bestScore);
-                        }
 
-                        board[i][j].setText("");
+                            board[i][j].setText("");
+                        }
                     }
                 }
-            }
-            if (recordVisuals) {
-                if (bestBranch != null) {
-                    ((GameState) bestBranch.getUserObject()).setOptimal(true);
-                    parentNode.add(bestBranch);
+                if (recordVisuals) {
+                    if (bestBranch != null) {
+                        ((GameState) bestBranch.getUserObject()).setOptimal(true);
+                        parentNode.add(bestBranch);
+                    }
+                    if (worstBranch != null && worstBranch != bestBranch) parentNode.add(worstBranch);
+                    if (drawBranch != null && drawBranch != bestBranch && drawBranch != worstBranch) parentNode.add(drawBranch);
                 }
-                if (worstBranch != null && worstBranch != bestBranch) parentNode.add(worstBranch);
-                if (drawBranch != null && drawBranch != bestBranch && drawBranch != worstBranch) parentNode.add(drawBranch);
+                return bestScore;
+                
+            } else {
+                int bestScore = Integer.MAX_VALUE;
+                int maxScoreForFilter = Integer.MIN_VALUE;
+
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if (board[i][j].getText().equals("")) {
+                            board[i][j].setText(humanPiece);
+                            
+                            DefaultMutableTreeNode tempNode = null;
+                            if (recordVisuals) {
+                                tempNode = new DefaultMutableTreeNode(
+                                        new GameState("Gerakan Manusia", getBoardSnapshot(), "", false));
+                            }
+                            
+                            int score = minimax(depth + 1, true, tempNode, maxDepth);
+                            
+                            if (recordVisuals && tempNode != null) {
+                                GameState state = (GameState) tempNode.getUserObject();
+                                state.setScoreInfo("Score: " + score);
+                                state.setRawScore(score);
+                                
+                                if (score < bestScore) {
+                                    bestScore = score; bestBranch = tempNode; 
+                                }
+                                if (score > maxScoreForFilter) {
+                                    maxScoreForFilter = score; worstBranch = tempNode;
+                                }
+                                if (score == 0) drawBranch = tempNode;
+                            } else {
+                                bestScore = Math.min(score, bestScore);
+                            }
+
+                            board[i][j].setText("");
+                        }
+                    }
+                }
+                if (recordVisuals) {
+                    if (bestBranch != null) {
+                        ((GameState) bestBranch.getUserObject()).setOptimal(true);
+                        parentNode.add(bestBranch);
+                    }
+                    if (worstBranch != null && worstBranch != bestBranch) parentNode.add(worstBranch);
+                    if (drawBranch != null && drawBranch != bestBranch && drawBranch != worstBranch) parentNode.add(drawBranch);
+                }
+                return bestScore;
             }
-            return bestScore;
         }
-    }
 
     private String[] getBoardSnapshot() {
         String[] snap = new String[9];
