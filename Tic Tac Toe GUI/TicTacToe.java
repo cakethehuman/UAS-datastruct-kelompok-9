@@ -63,7 +63,7 @@ public class TicTacToe {
         if (choice == JOptionPane.CLOSED_OPTION) System.exit(0);
 
         if (choice == 0) {
-            humanPiece = "O"; aiPiece = "X"; isHumanTurn = true;
+            humanPiece = "X"; aiPiece = "O"; isHumanTurn = true;
         } else {
             humanPiece = "O"; aiPiece = "X"; isHumanTurn = false; scheduleAIMove();
         }
