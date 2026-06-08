@@ -76,7 +76,7 @@ public class TicTacToe {
             if (!gameOver && isHumanTurn && clicked.getText().equals("")) {
                 clicked.setText(humanPiece);
                 
-                GameState humanState = new GameState("Human Plays " + humanPiece, getBoardSnapshot(), "", false);
+                GameState humanState = new GameState("Pemain Taro " + humanPiece, getBoardSnapshot(), "", false);
                 humanState.setActualGamePath(true);
                 DefaultMutableTreeNode humanNode = new DefaultMutableTreeNode(humanState);
                 currentHistoryNode.add(humanNode);
@@ -112,7 +112,7 @@ public class TicTacToe {
                     board[i][j].setText(aiPiece);
                     
                     DefaultMutableTreeNode tempNode = new DefaultMutableTreeNode(
-                    new GameState("AI considers move", getBoardSnapshot(), "", false));
+                    new GameState("Opsi Gerak AI", getBoardSnapshot(), "", false));
                     int score = minimax(0, false, tempNode, 9); 
                     GameState state = (GameState) tempNode.getUserObject();
                     state.setScoreInfo("Score: " + score);
@@ -136,7 +136,7 @@ public class TicTacToe {
         if (bestBranch != null) {
             ((GameState) bestBranch.getUserObject()).setActualGamePath(true);
             ((GameState) bestBranch.getUserObject()).setOptimal(true);
-            ((GameState) bestBranch.getUserObject()).setTitle("AI Chosen Move");
+            ((GameState) bestBranch.getUserObject()).setTitle("Gerakan Terbaik AI");
             currentHistoryNode.add(bestBranch);
         }
         if (worstBranch != null && worstBranch != bestBranch) currentHistoryNode.add(worstBranch);
@@ -177,7 +177,7 @@ public class TicTacToe {
                         DefaultMutableTreeNode tempNode = null;
                         if (recordVisuals) {
                             tempNode = new DefaultMutableTreeNode(
-                                    new GameState("AI Evaluation", getBoardSnapshot(), "", false));
+                                    new GameState("Gerakan AI", getBoardSnapshot(), "", false));
                         }
                         
                         int score = minimax(depth + 1, false, tempNode, maxDepth);
@@ -224,7 +224,7 @@ public class TicTacToe {
                         DefaultMutableTreeNode tempNode = null;
                         if (recordVisuals) {
                             tempNode = new DefaultMutableTreeNode(
-                                    new GameState("Human Reply Eval", getBoardSnapshot(), "", false));
+                                    new GameState("Gerakan Manusia", getBoardSnapshot(), "", false));
                         }
                         
                         int score = minimax(depth + 1, true, tempNode, maxDepth);
