@@ -51,7 +51,7 @@ class CustomTreeCanvas extends JPanel {
         
         if (rootLoc != null) {
             translateX = (1200 / 2.0) - rootLoc.x - (NODE_WIDTH / 2.0);
-            translateY = 50; // 50px margin from the top
+            translateY = 100; // 50px margin from the top
         }
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
@@ -117,9 +117,11 @@ class CustomTreeCanvas extends JPanel {
             if (p2 != null) {
                 GameState childState = (GameState) child.getUserObject();
                 
+                // game path beneran yang di ambil
                 if (childState.isActualGamePath()) {
                     g2.setStroke(new BasicStroke(10)); 
                     g2.setColor(new Color(0, 123, 255)); // Bright Blue
+                    // best path
                 } else if (childState.isOptimal()) {
                     g2.setStroke(new BasicStroke(6));
                     if (childState.getRawScore() > 0) {

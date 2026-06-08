@@ -63,7 +63,7 @@ public class TicTacToe {
         if (choice == JOptionPane.CLOSED_OPTION) System.exit(0);
 
         if (choice == 0) {
-            humanPiece = "X"; aiPiece = "O"; isHumanTurn = true;
+            humanPiece = "O"; aiPiece = "X"; isHumanTurn = true;
         } else {
             humanPiece = "O"; aiPiece = "X"; isHumanTurn = false; scheduleAIMove();
         }
@@ -90,7 +90,7 @@ public class TicTacToe {
     }
 
     private void scheduleAIMove() {
-        Timer timer = new Timer(500, e -> makeAIMove());
+        Timer timer = new Timer(200, e -> makeAIMove());
         timer.setRepeats(false);
         timer.start();
     }
@@ -112,11 +112,8 @@ public class TicTacToe {
                     board[i][j].setText(aiPiece);
                     
                     DefaultMutableTreeNode tempNode = new DefaultMutableTreeNode(
-                            new GameState("AI considers move", getBoardSnapshot(), "", false));
-                    
-                    // FIX 1: Change Depth from 3 to 9 so it evaluates the entire game
+                    new GameState("AI considers move", getBoardSnapshot(), "", false));
                     int score = minimax(0, false, tempNode, 9); 
-                    
                     GameState state = (GameState) tempNode.getUserObject();
                     state.setScoreInfo("Score: " + score);
                     state.setRawScore(score);
