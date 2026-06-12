@@ -18,18 +18,39 @@ public class GameState {
         this.rawScore = 0; 
     }
 
-    public String getTitle() { return title; }
+    public String getTitle() { 
+        return title; 
+    }
     
-    public void setTitle(String title) { this.title = title; } 
+    public void setTitle(String title) { 
+        this.title = title; 
+    } 
 
-    public String[] getBoardState() { return boardState; }
+    public String[] getBoardState() { 
+        return boardState; 
+    }
     
-    public String getScoreInfo() { return scoreInfo; }
-    public void setScoreInfo(String scoreInfo) { this.scoreInfo = scoreInfo; }
+    public String getScoreInfo() { 
+        return scoreInfo; 
+    }
     
-    public boolean isOptimal() { return isOptimal; }
-    public void setOptimal(boolean optimal) { this.isOptimal = optimal; }
+    public void setScoreInfo(String scoreInfo) { 
+        this.scoreInfo = scoreInfo; 
+    }
+    
+    public boolean isOptimal() {
+         return isOptimal; 
+    }
 
-    public int getRawScore() { return rawScore; }
-    public void setRawScore(int rawScore) { this.rawScore = rawScore; }
+    public void setOptimal(boolean optimal) {
+         this.isOptimal = optimal; 
+    }
+
+    public int getRawScore() { 
+        return rawScore; 
+    }
+
+    public void setRawScore(int rawScore) { 
+        this.rawScore = rawScore; 
+    }
 }

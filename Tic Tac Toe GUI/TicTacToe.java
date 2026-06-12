@@ -24,6 +24,7 @@ public class TicTacToe {
         startGame();
     }
 
+    // Setup GUI awal seperti tombol untuk taro x dan o serta tombol melihat game tree
     private void setupGUI() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(550, 650); 
@@ -42,7 +43,6 @@ public class TicTacToe {
         frame.add(gridPanel, BorderLayout.CENTER);
         
         viewTreeButton = new JButton("Liat Game Tree");
-        viewTreeButton.setFont(new Font("Arial", Font.PLAIN, 16));
         viewTreeButton.addActionListener(e -> TreeViewerWindow.display(fullGameTree, frame));
         frame.add(viewTreeButton, BorderLayout.SOUTH);
 
@@ -50,6 +50,7 @@ public class TicTacToe {
         frame.setVisible(true);
     }
 
+    // Setup game awal dengan value kosong dan membuat tombol option untuk pemain gerak pertama atau tidak
     private void startGame() {
         fullGameTree = new DefaultMutableTreeNode(new GameState(
                 "Game Start", new String[]{"","","","","","","","",""}, "", false));
@@ -69,6 +70,7 @@ public class TicTacToe {
         }
     }
 
+    // class yang berguna sebagai logika button
     private class ButtonClickListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -76,7 +78,7 @@ public class TicTacToe {
             if (!gameOver && isHumanTurn && clicked.getText().equals("")) {
                 clicked.setText(humanPiece);
                 
-                GameState humanState = new GameState("Pemain Taro " + humanPiece, getBoardSnapshot(), "", false);
+                GameState humanState = new GameState("Pemain Taro " + humanPiece, getBoardInfo(), "", false);
                 humanState.setActualGamePath(true);
                 DefaultMutableTreeNode humanNode = new DefaultMutableTreeNode(humanState);
                 currentHistoryNode.add(humanNode);
@@ -89,12 +91,14 @@ public class TicTacToe {
         }
     }
 
+    // Menentukan seberapa lama untuk AI (algoritma minimax) menaruh X atau O ke board
     private void scheduleAIMove() {
         Timer timer = new Timer(200, e -> makeAIMove());
         timer.setRepeats(false);
         timer.start();
     }
 
+    // Logika gerak dari AI
     private void makeAIMove() {
         if (gameOver) return;
 
@@ -112,7 +116,7 @@ public class TicTacToe {
                     board[i][j].setText(aiPiece);
                     
                     DefaultMutableTreeNode tempNode = new DefaultMutableTreeNode(
-                    new GameState("Opsi Gerak AI", getBoardSnapshot(), "", false));
+                    new GameState("Opsi Gerak AI", getBoardInfo(), "", false));
                     int score = minimax(0, false, tempNode, 9); 
                     GameState state = (GameState) tempNode.getUserObject();
                     state.setScoreInfo("Score: " + score);
@@ -150,7 +154,7 @@ public class TicTacToe {
         if (checkGameState(aiPiece)) return;
         isHumanTurn = true;
     }
-
+        // algoritma rekursif untuk prediksi semua posibilitas gerekan
         private int minimax(int depth, boolean isMaximizing, DefaultMutableTreeNode parentNode, int maxDepth) {
             int boardScore = evaluateBoard();
 
@@ -177,7 +181,7 @@ public class TicTacToe {
                             DefaultMutableTreeNode tempNode = null;
                             if (recordVisuals) {
                                 tempNode = new DefaultMutableTreeNode(
-                                        new GameState("Gerakan AI", getBoardSnapshot(), "", false));
+                                        new GameState("Gerakan AI", getBoardInfo(), "", false));
                             }
                             
                             int score = minimax(depth + 1, false, tempNode, maxDepth);
@@ -224,7 +228,7 @@ public class TicTacToe {
                             DefaultMutableTreeNode tempNode = null;
                             if (recordVisuals) {
                                 tempNode = new DefaultMutableTreeNode(
-                                        new GameState("Gerakan Manusia", getBoardSnapshot(), "", false));
+                                        new GameState("Gerakan Manusia", getBoardInfo(), "", false));
                             }
                             
                             int score = minimax(depth + 1, true, tempNode, maxDepth);
@@ -260,14 +264,20 @@ public class TicTacToe {
                 return bestScore;
             }
         }
-
-    private String[] getBoardSnapshot() {
-        String[] snap = new String[9];
+    
+    // mendapatkan data board
+    private String[] getBoardInfo() {
+        String[] boardInfo = new String[9];
         int index = 0;
-        for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) snap[index++] = board[i][j].getText();
-        return snap;
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                boardInfo[index++] = board[i][j].getText();
+            }
+        }
+        return boardInfo;
     }
 
+    // evaluasi untuk melihat siapa yang menang
     private int evaluateBoard() {
         String[][] field = new String[3][3];
         for (int i=0; i<3; i++) for (int j=0; j<3; j++) field[i][j] = board[i][j].getText();
@@ -288,6 +298,7 @@ public class TicTacToe {
         return 0;
     }
 
+    // check siapa yang menang
     private boolean checkGameState(String pieceToCheck) {
         int score = evaluateBoard();
         if (score == 10 || score == -10 || isBoardFull()) {
@@ -319,17 +330,30 @@ public class TicTacToe {
         return false;
     }
 
+    // melihat apakah board sudah full atau tidak
     private boolean isBoardFull() {
-        for (int i=0; i<3; i++) for (int j=0; j<3; j++) if (board[i][j].getText().equals("")) return false;
+        for (int i=0; i<3; i++){
+            for (int j=0; j<3; j++){
+                if (board[i][j].getText().equals("")){
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
+    // Reset board ke kondisi awal
     private void resetBoard() {
-        for (int i=0; i<3; i++) for (int j=0; j<3; j++) board[i][j].setText("");
+        for (int i=0; i<3; i++){
+            for (int j=0; j<3; j++) {
+                board[i][j].setText("");
+            }
+        } 
         gameOver = false;
         startGame(); 
     }
 
+    // setup game
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new TicTacToe());
     }

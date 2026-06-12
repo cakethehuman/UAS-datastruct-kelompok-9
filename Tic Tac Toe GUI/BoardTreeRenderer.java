@@ -8,12 +8,12 @@ public class BoardTreeRenderer extends JPanel implements TreeCellRenderer {
     private JLabel[] cells;
     private JPanel centerWrapper;
 
+    // setup render board
     public BoardTreeRenderer() {
         setLayout(new BorderLayout(5, 5));
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         titleLabel = new JLabel("", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 12));
         add(titleLabel, BorderLayout.NORTH);
 
         JPanel gridPanel = new JPanel(new GridLayout(3, 3));
@@ -50,14 +50,17 @@ public class BoardTreeRenderer extends JPanel implements TreeCellRenderer {
             String[] board = state.getBoardState();
             for (int i = 0; i < 9; i++) {
                 cells[i].setText(board[i]);
-                if (board[i].equals("X")) cells[i].setForeground(Color.BLUE);
-                else if (board[i].equals("O")) cells[i].setForeground(Color.RED);
-                else cells[i].setForeground(Color.BLACK);
+                if (board[i].equals("X")) {
+                    cells[i].setForeground(Color.BLUE);
+                }else if (board[i].equals("O")) {
+                    cells[i].setForeground(Color.RED);
+                }else {
+                    cells[i].setForeground(Color.BLACK);
+                }
             }
 
             if (state.isOptimal()) {
                 if (state.getRawScore() > 0) { 
-                    
                     setBorder(BorderFactory.createLineBorder(new Color(40, 167, 69), 8));
                     setBackground(new Color(200, 255, 210));
                     centerWrapper.setBackground(new Color(200, 255, 210));
