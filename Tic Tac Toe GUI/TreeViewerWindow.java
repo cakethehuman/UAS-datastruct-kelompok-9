@@ -11,14 +11,14 @@ public class TreeViewerWindow {
         treeFrame.setSize(1200, 800);
         treeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        GambarTree canvas = new GambarTree(treeRoot);
+        drawTheTree canvas = new drawTheTree(treeRoot);
         treeFrame.add(canvas);
         treeFrame.setLocationRelativeTo(parentFrame);
         treeFrame.setVisible(true);
     }
 }
 // gambar hasil phon
-class GambarTree extends JPanel {
+class drawTheTree extends JPanel {
     private DefaultMutableTreeNode root;
     private Map<DefaultMutableTreeNode, Point> nodeLocations;
     
@@ -36,7 +36,7 @@ class GambarTree extends JPanel {
     
     private CellRendererPane rendererPane;
 
-    public GambarTree(DefaultMutableTreeNode root) {
+    public drawTheTree(DefaultMutableTreeNode root) {
         this.root = root;
         this.nodeLocations = new HashMap<>();
         this.cellRenderer = new BoardTreeRenderer();
@@ -45,7 +45,7 @@ class GambarTree extends JPanel {
         add(rendererPane);
         
         setBackground(new Color(245, 245, 250));
-        hitungLayoutGambar(root, 50, 50);
+        calcImageLayout(root, 50, 50);
 
         Point rootLoc = nodeLocations.get(root);
         
@@ -77,14 +77,14 @@ class GambarTree extends JPanel {
         });
     }
 
-    private int hitungLayoutGambar(DefaultMutableTreeNode node, int startX, int y) {
+    private int calcImageLayout(DefaultMutableTreeNode node, int startX, int y) {
         int currentX = startX;
         if (node.isLeaf()) {
             nodeLocations.put(node, new Point(currentX, y));
             return currentX + NODE_WIDTH + HORIZONTAL_GAP;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
-            currentX = hitungLayoutGambar((DefaultMutableTreeNode) node.getChildAt(i), currentX, y + NODE_HEIGHT + VERTICAL_GAP);
+            currentX = calcImageLayout((DefaultMutableTreeNode) node.getChildAt(i), currentX, y + NODE_HEIGHT + VERTICAL_GAP);
         }
         Point firstChild = nodeLocations.get((DefaultMutableTreeNode) node.getFirstChild());
         Point lastChild = nodeLocations.get((DefaultMutableTreeNode) node.getLastChild());
@@ -102,11 +102,11 @@ class GambarTree extends JPanel {
 
         g2.setColor(new Color(150, 150, 150));
         g2.setStroke(new BasicStroke(3));
-        gambarGarisPadaGambar(g2, root);
-        gambarNodePadaGambar(g2, root);
+        linedrawer(g2, root);
+        nodeDrawer(g2, root);
     }
 
-    private void gambarGarisPadaGambar(Graphics2D g2, DefaultMutableTreeNode node) {
+    private void linedrawer(Graphics2D g2, DefaultMutableTreeNode node) {
         Point p1 = nodeLocations.get(node);
         if (p1 == null) return;
         
@@ -139,12 +139,12 @@ class GambarTree extends JPanel {
                 g2.drawLine(p1.x + (NODE_WIDTH / 2), p1.y + NODE_HEIGHT, p2.x + (NODE_WIDTH / 2), p2.y);
                 
              
-                gambarGarisPadaGambar(g2, child);
+                linedrawer(g2, child);
             }
         }
     }
 
-    private void gambarNodePadaGambar(Graphics2D g2, DefaultMutableTreeNode node) {
+    private void nodeDrawer(Graphics2D g2, DefaultMutableTreeNode node) {
         Point p = nodeLocations.get(node);
         if (p != null) {
             Component stamp = cellRenderer.getTreeCellRendererComponent(new JTree(), node, false, false, node.isLeaf(), 0, false);
@@ -152,7 +152,7 @@ class GambarTree extends JPanel {
         }
         
         for (int i = 0; i < node.getChildCount(); i++) {
-            gambarNodePadaGambar(g2, (DefaultMutableTreeNode) node.getChildAt(i));
+            nodeDrawer(g2, (DefaultMutableTreeNode) node.getChildAt(i));
         }
     }
 }
