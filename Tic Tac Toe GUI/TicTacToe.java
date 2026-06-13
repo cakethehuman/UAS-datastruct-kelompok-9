@@ -156,7 +156,7 @@ public class TicTacToe {
         if (checkGameState(aiPiece)) return;
         isHumanTurn = true;
     }
-        // algoritma rekursif untuk prediksi semua posibilitas gerekan
+        // algoritma rekursif untuk prediksi semua posibilitas gerakan
         private int minimax(int depth, boolean isMaximizing, DefaultMutableTreeNode parentNode, int maxDepth) {
             int boardScore = evaluateBoard();
 
