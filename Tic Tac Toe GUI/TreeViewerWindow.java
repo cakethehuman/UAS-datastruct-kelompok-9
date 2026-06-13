@@ -17,7 +17,7 @@ public class TreeViewerWindow {
         treeFrame.setVisible(true);
     }
 }
-
+// gambar hasil phon
 class GambarTree extends JPanel {
     private DefaultMutableTreeNode root;
     private Map<DefaultMutableTreeNode, Point> nodeLocations;
@@ -51,7 +51,7 @@ class GambarTree extends JPanel {
         
         if (rootLoc != null) {
             translateX = (1200 / 2.0) - rootLoc.x - (NODE_WIDTH / 2.0);
-            translateY = 100; // 50px margin from the top
+            translateY = 100; 
         }
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
