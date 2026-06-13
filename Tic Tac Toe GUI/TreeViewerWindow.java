@@ -45,7 +45,7 @@ class GambarTree extends JPanel {
         add(rendererPane);
         
         setBackground(new Color(245, 245, 250));
-        calculateLayout(root, 50, 50);
+        hitungLayoutGambar(root, 50, 50);
 
         Point rootLoc = nodeLocations.get(root);
         
@@ -77,14 +77,14 @@ class GambarTree extends JPanel {
         });
     }
 
-    private int calculateLayout(DefaultMutableTreeNode node, int startX, int y) {
+    private int hitungLayoutGambar(DefaultMutableTreeNode node, int startX, int y) {
         int currentX = startX;
         if (node.isLeaf()) {
             nodeLocations.put(node, new Point(currentX, y));
             return currentX + NODE_WIDTH + HORIZONTAL_GAP;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
-            currentX = calculateLayout((DefaultMutableTreeNode) node.getChildAt(i), currentX, y + NODE_HEIGHT + VERTICAL_GAP);
+            currentX = hitungLayoutGambar((DefaultMutableTreeNode) node.getChildAt(i), currentX, y + NODE_HEIGHT + VERTICAL_GAP);
         }
         Point firstChild = nodeLocations.get((DefaultMutableTreeNode) node.getFirstChild());
         Point lastChild = nodeLocations.get((DefaultMutableTreeNode) node.getLastChild());
@@ -102,11 +102,11 @@ class GambarTree extends JPanel {
 
         g2.setColor(new Color(150, 150, 150));
         g2.setStroke(new BasicStroke(3));
-        drawLines(g2, root);
-        drawNodes(g2, root);
+        gambarGarisPadaGambar(g2, root);
+        gambarNodePadaGambar(g2, root);
     }
 
-    private void drawLines(Graphics2D g2, DefaultMutableTreeNode node) {
+    private void gambarGarisPadaGambar(Graphics2D g2, DefaultMutableTreeNode node) {
         Point p1 = nodeLocations.get(node);
         if (p1 == null) return;
         
@@ -139,12 +139,12 @@ class GambarTree extends JPanel {
                 g2.drawLine(p1.x + (NODE_WIDTH / 2), p1.y + NODE_HEIGHT, p2.x + (NODE_WIDTH / 2), p2.y);
                 
              
-                drawLines(g2, child);
+                gambarGarisPadaGambar(g2, child);
             }
         }
     }
 
-    private void drawNodes(Graphics2D g2, DefaultMutableTreeNode node) {
+    private void gambarNodePadaGambar(Graphics2D g2, DefaultMutableTreeNode node) {
         Point p = nodeLocations.get(node);
         if (p != null) {
             Component stamp = cellRenderer.getTreeCellRendererComponent(new JTree(), node, false, false, node.isLeaf(), 0, false);
@@ -152,7 +152,7 @@ class GambarTree extends JPanel {
         }
         
         for (int i = 0; i < node.getChildCount(); i++) {
-            drawNodes(g2, (DefaultMutableTreeNode) node.getChildAt(i));
+            gambarNodePadaGambar(g2, (DefaultMutableTreeNode) node.getChildAt(i));
         }
     }
 }
