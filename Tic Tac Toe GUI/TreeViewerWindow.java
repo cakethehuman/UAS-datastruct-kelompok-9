@@ -11,14 +11,14 @@ public class TreeViewerWindow {
         treeFrame.setSize(1200, 800);
         treeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        CustomTreeCanvas canvas = new CustomTreeCanvas(treeRoot);
+        GambarTree canvas = new GambarTree(treeRoot);
         treeFrame.add(canvas);
         treeFrame.setLocationRelativeTo(parentFrame);
         treeFrame.setVisible(true);
     }
 }
 
-class CustomTreeCanvas extends JPanel {
+class GambarTree extends JPanel {
     private DefaultMutableTreeNode root;
     private Map<DefaultMutableTreeNode, Point> nodeLocations;
     
@@ -36,7 +36,7 @@ class CustomTreeCanvas extends JPanel {
     
     private CellRendererPane rendererPane;
 
-    public CustomTreeCanvas(DefaultMutableTreeNode root) {
+    public GambarTree(DefaultMutableTreeNode root) {
         this.root = root;
         this.nodeLocations = new HashMap<>();
         this.cellRenderer = new BoardTreeRenderer();
